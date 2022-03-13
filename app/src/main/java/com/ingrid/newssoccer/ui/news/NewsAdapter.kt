@@ -1,10 +1,15 @@
 package com.ingrid.newssoccer.ui.news
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.ingrid.newssoccer.News
 import com.ingrid.newssoccer.databinding.NewsItemBinding
+import com.ingrid.newssoccer.model.News
+import com.squareup.picasso.Picasso
+
 
 class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
 
@@ -15,6 +20,14 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
 
             newsRow.tvTitleNews.text = news.title
             newsRow.tvSubtitleNews.text = news.description
+            Picasso.get()
+                .load(news.image)
+                .into(newsRow.ivNews)
+            newsRow.btOpenLink.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(news.link)
+                itemView.context.startActivity(intent)
+            }
         }
     }
 

@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.ingrid.newssoccer.News
+import com.ingrid.newssoccer.model.News
 import com.ingrid.newssoccer.databinding.FragmentNewsBinding
 
 class NewsFragment : Fragment() {
