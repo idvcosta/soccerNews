@@ -6,33 +6,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ingrid.newssoccer.api.ServiceFactoryAPI
 import com.ingrid.newssoccer.model.News
+import com.ingrid.newssoccer.repositories.NewsRepository
+import com.ingrid.newssoccer.usecases.OpenLinkUseCase
+import com.ingrid.newssoccer.usecases.ShareUserCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class NewsViewModel : ViewModel() {
+class NewsViewModel(
+    private val repository: NewsRepository,
+    private val openLinkUserCase: OpenLinkUseCase,
+    private val shareUserCase: ShareUserCase
+) : ViewModel() {
 
-//    private val listNews =
-//        mutableListOf<News>(
-//            News("Brasil joga nessa quarta-feira", "Segundo comunicado do clube celeste, projeto da base envolverá intercâmbio de atletas"),
-//            News("Clube estuda contratar atleta Ucraniano", "Segundo comunicado do clube celeste, projeto da base envolverá intercâmbio de atletas"),
-//            News("Estádio passará por reformas no gramado", "Segundo comunicado do clube celeste, projeto da base envolverá intercâmbio de atletas"),
-//            News("Atacante do Sport, Jorguinho, inicia tratamento", "Segundo comunicado do clube celeste, projeto da base envolverá intercâmbio de atletas"),
-//            News("Time Pernambucano faz parceria com iFood", "Segundo comunicado do clube celeste, projeto da base envolverá intercâmbio de atletas")
-//        )
-//
-//    private val news by lazy { MutableLiveData<List<News>>(listNews) }
-
-
-    private val news = MutableLiveData<List<News>>()
+    private val newsList = MutableLiveData<List<News>>()
 
     init {
         requestNews()
     }
 
-    fun getNews(): LiveData<List<News>> = news
+    fun getNewsList(): LiveData<List<News>> = newsList
 
     private fun requestNews() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -42,7 +37,7 @@ class NewsViewModel : ViewModel() {
             listNewsCall.enqueue(object : Callback<List<News>> {
                 override fun onResponse(call: Call<List<News>>, response: Response<List<News>>) {
                     response.body()?.let { news ->
-                        this@NewsViewModel.news.postValue(news)
+                        newsList.postValue(news)
                     }
                 }
 
@@ -51,5 +46,21 @@ class NewsViewModel : ViewModel() {
                 }
             })
         }
+    }
+
+    fun favoriteNews(news: News) {
+        news.isFavorite = !news.isFavorite
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addFavorite(news)
+            newsList.postValue(newsList.value)
+        }
+    }
+
+    fun openNewsLink(news: News) {
+        openLinkUserCase.execute(news)
+    }
+
+    fun shareNews(news: News) {
+        shareUserCase.execute(news)
     }
 }

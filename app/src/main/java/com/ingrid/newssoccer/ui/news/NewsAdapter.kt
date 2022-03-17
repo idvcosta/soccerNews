@@ -1,17 +1,22 @@
 package com.ingrid.newssoccer.ui.news
 
-import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.ingrid.newssoccer.R
 import com.ingrid.newssoccer.databinding.NewsItemBinding
 import com.ingrid.newssoccer.model.News
 import com.squareup.picasso.Picasso
+import java.util.function.Consumer
 
+class NewsAdapter(
+    private val favoriteCallback: Consumer<News>,
+    private val openNewsCallback: Consumer<News>,
+    private val shareNewsCallback: Consumer<News>
+) :
+    RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
+    private var news: List<News>? = null
 
     class NewsHolder(private val newsRow: NewsItemBinding) :
         RecyclerView.ViewHolder(newsRow.root) {
@@ -23,20 +28,35 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
             Picasso.get()
                 .load(news.image)
                 .into(newsRow.ivNews)
-            newsRow.btOpenLink.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(news.link)
-                itemView.context.startActivity(intent)
+
+            val favoriteIconColor = if (news.isFavorite){
+                R.color.favorite_active
+            }else{
+                R.color.favorite_inactive
             }
+            val color = newsRow.root.context.getColor(favoriteIconColor)
+            newsRow.ivFavorite.setColorFilter(color)
         }
     }
-
-    var news: List<News>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
         val newsRow = NewsItemBinding.inflate(inflater, parent, false)
+
+        newsRow.btOpenLink.setOnClickListener {
+            val news = newsRow.root.tag as News
+            openNewsCallback.accept(news)
+        }
+        newsRow.ivShare.setOnClickListener {
+            val news = newsRow.root.tag as News
+            shareNewsCallback.accept(news)
+        }
+
+        newsRow.ivFavorite.setOnClickListener {
+            val news = newsRow.root.tag as News
+            favoriteCallback.accept(news)
+        }
 
         return NewsHolder(newsRow)
     }

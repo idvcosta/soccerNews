@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
 }
 
 android {
@@ -54,8 +55,17 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.6.1"
     implementation "com.squareup.okhttp3:logging-interceptor:3.12.1"
 
-//    Picasso
+    // Picasso
     implementation 'com.squareup.picasso:picasso:2.8'
+
+    // Room
+    implementation("androidx.room:room-runtime:2.4.2")
+    annotationProcessor("androidx.room:room-compiler:2.4.2")
+    kapt("androidx.room:room-compiler:2.4.2")
+
+    // Koin
+    implementation "io.insert-koin:koin-android:3.1.0"
+    implementation "io.insert-koin:koin-android-compat:3.1.0"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

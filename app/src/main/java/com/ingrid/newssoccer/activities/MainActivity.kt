@@ -9,8 +9,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ingrid.newssoccer.R
 import com.ingrid.newssoccer.databinding.ActivityMainBinding
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.scope.activityScope
+import org.koin.core.component.KoinScopeComponent
+import org.koin.core.scope.Scope
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()
+//    ,AndroidScopeComponent
+{
+//    override val scope : Scope by activityScope()
 
     private lateinit var binding: ActivityMainBinding
 

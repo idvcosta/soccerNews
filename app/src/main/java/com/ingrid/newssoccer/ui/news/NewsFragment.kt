@@ -5,15 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.ingrid.newssoccer.model.News
 import com.ingrid.newssoccer.databinding.FragmentNewsBinding
+import com.ingrid.newssoccer.model.News
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewsFragment : Fragment() {
 
     private lateinit var binding: FragmentNewsBinding
-    private val viewModel: NewsViewModel by activityViewModels<NewsViewModel>()
-    private val newsAdapter = NewsAdapter()
+    private val viewModel by viewModel<NewsViewModel>()
+    private val newsAdapter =
+        NewsAdapter(::onFavoriteClicked, ::onOpenNewsClicked, ::onShareNewsClicked)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,14 +34,22 @@ class NewsFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel.getNews().observe(requireActivity(), ::updateNews)
+        viewModel.getNewsList().observe(requireActivity(), ::updateNews)
     }
 
     private fun updateNews(news: List<News>) {
         newsAdapter.updateNews(news)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    private fun onFavoriteClicked(news: News) {
+        viewModel.favoriteNews(news)
+    }
+
+    private fun onShareNewsClicked(news: News) {
+        viewModel.shareNews(news)
+    }
+
+    private fun onOpenNewsClicked(news: News) {
+        viewModel.openNewsLink(news)
     }
 }
