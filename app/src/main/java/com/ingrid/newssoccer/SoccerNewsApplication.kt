@@ -2,6 +2,7 @@ package com.ingrid.newssoccer
 
 import android.app.Application
 import com.ingrid.newssoccer.repositories.NewsRepository
+import com.ingrid.newssoccer.ui.favorites.FavoritesViewModel
 import com.ingrid.newssoccer.ui.news.NewsViewModel
 import com.ingrid.newssoccer.usecases.OpenLinkUseCase
 import com.ingrid.newssoccer.usecases.ShareUserCase
@@ -17,14 +18,15 @@ val soccerNewsModule = module {
     single { OpenLinkUseCase(get()) }
     single { ShareUserCase(get()) }
     viewModel { NewsViewModel(get(), get(), get()) }
+    viewModel { FavoritesViewModel(get(), get(), get()) }
 
 }
 
-class SoccerNewsApplication: Application(){
+class SoccerNewsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         // Start Koin
-        startKoin{
+        startKoin {
             androidLogger(Level.ERROR)
             androidContext(this@SoccerNewsApplication)
             modules(soccerNewsModule)

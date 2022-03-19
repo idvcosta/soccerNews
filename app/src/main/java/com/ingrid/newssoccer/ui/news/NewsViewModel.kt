@@ -1,7 +1,6 @@
 package com.ingrid.newssoccer.ui.news
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ingrid.newssoccer.api.ServiceFactoryAPI
@@ -11,6 +10,7 @@ import com.ingrid.newssoccer.usecases.OpenLinkUseCase
 import com.ingrid.newssoccer.usecases.ShareUserCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,13 +21,20 @@ class NewsViewModel(
     private val shareUserCase: ShareUserCase
 ) : ViewModel() {
 
-    private val newsList = MutableLiveData<List<News>>()
+    private lateinit var newsList: LiveData<List<News>>
 
     init {
+        loadNews()
         requestNews()
     }
 
-    fun getNewsList(): LiveData<List<News>> = newsList
+    fun getNewsList() = newsList
+
+    private fun loadNews() {
+        runBlocking {
+            newsList = repository.allNews()
+        }
+    }
 
     private fun requestNews() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -37,7 +44,9 @@ class NewsViewModel(
             listNewsCall.enqueue(object : Callback<List<News>> {
                 override fun onResponse(call: Call<List<News>>, response: Response<List<News>>) {
                     response.body()?.let { news ->
-                        newsList.postValue(news)
+                        viewModelScope.launch(Dispatchers.IO) {
+                            news.forEach(repository::save)
+                        }
                     }
                 }
 
@@ -51,8 +60,7 @@ class NewsViewModel(
     fun favoriteNews(news: News) {
         news.isFavorite = !news.isFavorite
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addFavorite(news)
-            newsList.postValue(newsList.value)
+            repository.save(news)
         }
     }
 

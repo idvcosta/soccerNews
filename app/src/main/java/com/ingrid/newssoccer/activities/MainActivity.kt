@@ -1,23 +1,16 @@
 package com.ingrid.newssoccer.activities
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.ingrid.newssoccer.R
 import com.ingrid.newssoccer.databinding.ActivityMainBinding
-import org.koin.android.scope.AndroidScopeComponent
-import org.koin.androidx.scope.activityScope
-import org.koin.core.component.KoinScopeComponent
-import org.koin.core.scope.Scope
 
-class MainActivity : AppCompatActivity()
-//    ,AndroidScopeComponent
-{
-//    override val scope : Scope by activityScope()
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 

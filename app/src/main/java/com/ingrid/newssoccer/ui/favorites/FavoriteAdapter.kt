@@ -1,4 +1,4 @@
-package com.ingrid.newssoccer.ui.news
+package com.ingrid.newssoccer.ui.favorites
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,16 +9,16 @@ import com.ingrid.newssoccer.model.News
 import com.squareup.picasso.Picasso
 import java.util.function.Consumer
 
-class NewsAdapter(
+class FavoriteAdapter(
     private val favoriteCallback: Consumer<News>,
     private val openNewsCallback: Consumer<News>,
     private val shareNewsCallback: Consumer<News>
 ) :
-    RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
+    RecyclerView.Adapter<FavoriteAdapter.FavoriteHolder>() {
 
-    private var news: List<News>? = null
+    private var favoriteList: List<News>? = null
 
-    class NewsHolder(private val newsRow: NewsItemBinding) :
+    class FavoriteHolder(private val newsRow: NewsItemBinding) :
         RecyclerView.ViewHolder(newsRow.root) {
         fun bind(news: News) {
             newsRow.root.tag = news
@@ -39,7 +39,7 @@ class NewsAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
         val newsRow = NewsItemBinding.inflate(inflater, parent, false)
@@ -58,26 +58,21 @@ class NewsAdapter(
             favoriteCallback.accept(news)
         }
 
-        return NewsHolder(newsRow)
+        return FavoriteHolder(newsRow)
     }
 
-    override fun onBindViewHolder(holder: NewsHolder, position: Int) {
-        news?.let {
-            val news = it[position]
-            holder.bind(news)
+    override fun onBindViewHolder(holder: FavoriteHolder, position: Int) {
+        favoriteList?.let {
+            val favorite = it[position]
+            holder.bind(favorite)
         }
     }
 
-    override fun getItemCount(): Int = news?.size ?: 0
+    override fun getItemCount(): Int = favoriteList?.size ?: 0
 
-    fun updateNews(news: List<News>) {
-        this.news = news
+    fun updateFavorites(favorites: List<News>) {
+        this.favoriteList = favorites
         notifyDataSetChanged()
     }
-
-//    fun updateFavorites(favorites: List<News>) {
-//        this.news = favorites
-//        notifyDataSetChanged()
-//    }
 
 }
