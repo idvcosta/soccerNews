@@ -1,4 +1,4 @@
-package com.ingrid.newssoccer.api
+package com.ingrid.newssoccer.data.remote
 
 import com.ingrid.newssoccer.model.News
 import retrofit2.Call

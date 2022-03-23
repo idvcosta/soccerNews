@@ -6,4 +6,5 @@
     <string name="cd_news_image">News Image</string>
     <string name="cd_favorite_icon">favorite icon</string>
     <string name="cd_share_icon">share icon</string>
+    <string name="nothing_found">Dados não encontrados!</string>
 </resources>

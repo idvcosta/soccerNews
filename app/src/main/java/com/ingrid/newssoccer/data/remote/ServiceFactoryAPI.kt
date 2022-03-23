@@ -1,4 +1,4 @@
-package com.ingrid.newssoccer.api
+package com.ingrid.newssoccer.data.remote
 
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit

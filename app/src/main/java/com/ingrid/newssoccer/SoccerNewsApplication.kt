@@ -1,7 +1,7 @@
 package com.ingrid.newssoccer
 
 import android.app.Application
-import com.ingrid.newssoccer.repositories.NewsRepository
+import com.ingrid.newssoccer.data.NewsRepository
 import com.ingrid.newssoccer.ui.favorites.FavoritesViewModel
 import com.ingrid.newssoccer.ui.news.NewsViewModel
 import com.ingrid.newssoccer.usecases.OpenLinkUseCase

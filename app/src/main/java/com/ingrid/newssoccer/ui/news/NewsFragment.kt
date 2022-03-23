@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ingrid.newssoccer.databinding.FragmentNewsBinding
 import com.ingrid.newssoccer.model.News
+import com.ingrid.newssoccer.ui.State
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewsFragment : Fragment() {
@@ -34,6 +35,23 @@ class NewsFragment : Fragment() {
     }
 
     private fun initViewModel() {
+        viewModel.getStatus().observe(requireActivity()) {
+            when (it) {
+                State.PROGRESS -> {
+                    binding.progress.visibility = View.VISIBLE
+                    binding.tvError.visibility = View.GONE
+                }
+                State.DATA_LOADED -> {
+                    binding.progress.visibility = View.GONE
+                    binding.tvError.visibility = View.GONE
+                }
+                State.ERROR -> {
+                    binding.progress.visibility = View.GONE
+                    binding.tvError.visibility = View.VISIBLE
+                }
+            }
+        }
+
         viewModel.getNewsList().observe(requireActivity(), ::updateNews)
     }
 

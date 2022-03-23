@@ -1,4 +1,4 @@
-package com.ingrid.newssoccer.repositories
+package com.ingrid.newssoccer.data.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

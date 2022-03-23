@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ingrid.newssoccer.model.News
-import com.ingrid.newssoccer.repositories.NewsRepository
+import com.ingrid.newssoccer.data.NewsRepository
 import com.ingrid.newssoccer.usecases.OpenLinkUseCase
 import com.ingrid.newssoccer.usecases.ShareUserCase
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.ingrid.newssoccer.repositories
+package com.ingrid.newssoccer.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

@@ -1,11 +1,13 @@
 package com.ingrid.newssoccer.ui.news
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ingrid.newssoccer.api.ServiceFactoryAPI
+import com.ingrid.newssoccer.data.NewsRepository
 import com.ingrid.newssoccer.model.News
-import com.ingrid.newssoccer.repositories.NewsRepository
+import com.ingrid.newssoccer.ui.State
 import com.ingrid.newssoccer.usecases.OpenLinkUseCase
 import com.ingrid.newssoccer.usecases.ShareUserCase
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +24,7 @@ class NewsViewModel(
 ) : ViewModel() {
 
     private lateinit var newsList: LiveData<List<News>>
+    private val state = MutableLiveData(State.PROGRESS)
 
     init {
         loadNews()
@@ -29,6 +32,7 @@ class NewsViewModel(
     }
 
     fun getNewsList() = newsList
+    fun getStatus(): LiveData<State> = state
 
     private fun loadNews() {
         runBlocking {
@@ -38,20 +42,19 @@ class NewsViewModel(
 
     private fun requestNews() {
         viewModelScope.launch(Dispatchers.IO) {
-            val service = ServiceFactoryAPI.createNewsService()
-            val listNewsCall = service.listNews()
-
-            listNewsCall.enqueue(object : Callback<List<News>> {
+            repository.listNews(object : Callback<List<News>> {
                 override fun onResponse(call: Call<List<News>>, response: Response<List<News>>) {
                     response.body()?.let { news ->
                         viewModelScope.launch(Dispatchers.IO) {
                             news.forEach(repository::save)
                         }
+                        state.postValue(State.DATA_LOADED)
                     }
                 }
 
                 override fun onFailure(call: Call<List<News>>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    Log.e(this@NewsViewModel.toString(), "Error loading News", t)
+                    state.postValue(State.ERROR)
                 }
             })
         }
